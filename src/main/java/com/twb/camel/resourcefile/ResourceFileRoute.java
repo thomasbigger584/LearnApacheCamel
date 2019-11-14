@@ -1,4 +1,4 @@
-package com.twb.camel;
+package com.twb.camel.resourcefile;
 
 import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
