@@ -1,15 +1,15 @@
 package com.twb.camel.resourcefile;
 
 import org.apache.camel.Message;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.spring.SpringRouteBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 
 @Component
-public class ResourceFileRoute extends RouteBuilder {
+public class ResourceFileRoute extends SpringRouteBuilder {
     @Override
     public void configure() {
 
