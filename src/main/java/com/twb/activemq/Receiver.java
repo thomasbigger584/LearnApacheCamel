@@ -21,4 +21,9 @@ public class Receiver {
     public void receiveXml(Message message) {
         log.info("XML received'{}'", message);
     }
+
+    @JmsListener(destination = "file.q")
+    public void receiveFile(Message message) {
+        log.info("File received'{}'", message);
+    }
 }

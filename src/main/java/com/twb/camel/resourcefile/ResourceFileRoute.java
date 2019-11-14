@@ -31,11 +31,13 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                 choice().
                     when(header("FileExtension").isEqualTo("csv")).
                         to("jms:queue:csv.q").
-                    when(header("FileExtension").isEqualTo("json")).
+                    otherwise().when(header("FileExtension").isEqualTo("json")).
                         to("jms:queue:json.q").
-                    when(header("FileExtension").isEqualTo("xml")).
+                    otherwise().when(header("FileExtension").isEqualTo("xml")).
                         to("jms:queue:xml.q").
-                endChoice();
+                end().
+
+                to("jms:queue:file.q");
 
         // @formatter:on
     }
