@@ -15,6 +15,6 @@ public class PushTimeToActiveMqQueueRoute extends RouteBuilder {
                     Message in = exchange.getIn();
                     in.setBody(millis, Long.class);
                 }).
-                to("jms:helloworld.q");
+                to("jms:queue:helloworld.q");
     }
 }
