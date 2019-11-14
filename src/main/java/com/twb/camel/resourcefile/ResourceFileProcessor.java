@@ -19,12 +19,10 @@ public class ResourceFileProcessor implements Processor {
         File file = resource.getFile();
 
         if (exchange.getPattern().isOutCapable()) {
-            log.info("Exchange isOutCapable");
             Message out = exchange.getOut();
             out.copyFrom(exchange.getIn());
             out.setBody(file, File.class);
         } else {
-            log.info("Exchange Only isInCapable");
             Message in = exchange.getIn();
             in.setBody(file, File.class);
         }

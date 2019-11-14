@@ -1,12 +1,11 @@
 package com.twb.camel.resourcefile;
 
 import org.apache.camel.Message;
-import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.spring.SpringRouteBuilder;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.LinkedHashMap;
 
 @Component
 public class ResourceFileRoute extends SpringRouteBuilder {
@@ -25,20 +24,21 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                 process(exchange -> {
                     Message message = exchange.getMessage();
                     File file = message.getBody(File.class);
-                    log.info("File: " + file);
+    String extension = FilenameUtils.getExtension(file.getName());
+    message.setHeader("FileExtension", extension);
                 }).
 
-//                Use Jackson to deserialise the file into a LinkedHashMap
-                unmarshal(new JacksonDataFormat()).
-
-//                Verifying that indeed it is a LinkedHashMap in the body of the message
                 process(exchange -> {
-                    Message message = exchange.getMessage();
-                    LinkedHashMap map = message.getBody(LinkedHashMap.class);
-                    log.info("LinkedHashMap: " + map);
+                    log.info(exchange.getMessage().getHeaders().toString());
                 }).
 
-//                logging out the exchange
-                to("log:logger");
+                choice().
+                when(header("FileExtension").isEqualTo("csv")).
+                to("jms:queue:csv.q").
+                when(header("FileExtension").isEqualTo("json")).
+                to("jms:queue:json.q").
+                when(header("FileExtension").isEqualTo("xml")).
+                to("jms:queue:xml.q").
+                endChoice();
     }
 }

@@ -27,9 +27,8 @@ public class ApacheCamelApplication implements CommandLineRunner {
 
 //        send message directy to get a file from resources on a camel route for resources file path
 //        todo would like to update this to use a consumer to automatically get the file instead of this
+        producerTemplate.sendBody("direct:resourceFile", "json/data.csv");
         producerTemplate.sendBody("direct:resourceFile", "json/data.json");
-
-//        using activemq to send this string message onto a queue
-        sender.send("Hello World from Application");
+        producerTemplate.sendBody("direct:resourceFile", "json/data.xml");
     }
 }
