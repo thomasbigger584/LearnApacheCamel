@@ -15,14 +15,16 @@ public class ResourceFileProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         Message message = exchange.getMessage();
         final String filePath = message.getBody(String.class);
-
         Resource resource = new ClassPathResource(filePath);
         File file = resource.getFile();
+
         if (exchange.getPattern().isOutCapable()) {
+            log.info("Exchange isOutCapable");
             Message out = exchange.getOut();
             out.copyFrom(exchange.getIn());
             out.setBody(file, File.class);
         } else {
+            log.info("Exchange Only isInCapable");
             Message in = exchange.getIn();
             in.setBody(file, File.class);
         }
