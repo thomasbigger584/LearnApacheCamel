@@ -7,6 +7,11 @@ import org.springframework.jms.annotation.JmsListener;
 @Slf4j
 public class Receiver {
 
+    @JmsListener(destination = "audit.q")
+    public void receiveAudit(Message message) {
+        log.info("Audit received'{}'", message);
+    }
+
     @JmsListener(destination = "csv.q")
     public void receiveCsv(Message message) {
         log.info("CSV received'{}'", message);
@@ -25,5 +30,15 @@ public class Receiver {
     @JmsListener(destination = "file.q")
     public void receiveFile(Message message) {
         log.info("File received'{}'", message);
+    }
+
+    @JmsListener(destination = "multicast1.q")
+    public void receivMulticast1(Message message) {
+        log.info("Multicast1 received'{}'", message);
+    }
+
+    @JmsListener(destination = "multicast2.q")
+    public void receiveMulticast2(Message message) {
+        log.info("Multicast2 received'{}'", message);
     }
 }

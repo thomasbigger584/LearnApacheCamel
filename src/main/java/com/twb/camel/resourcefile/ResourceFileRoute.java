@@ -15,9 +15,8 @@ public class ResourceFileRoute extends SpringRouteBuilder {
 
                 process(new ResourceFileProcessor()).
 
-                process(exchange -> {
-                    log.info(exchange.getMessage().getHeaders().toString());
-                }).
+                //audit type 'to' producer
+                wireTap("jms:queue:audit.q").
 
                 filter(exchange -> {
                   FileType fileType = exchange.getIn().
@@ -34,9 +33,13 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                         to("jms:queue:xml.q").
                 end().
 
-                to("jms:queue:file.q");
+                to("jms:queue:file.q").
+
+                multicast().
+                    parallelProcessing().
+                    stopOnException().
+                        to("jms:queue:multicast1.q", "jms:queue:multicast2.q");
 
         //@formatter:on
     }
-
 }
