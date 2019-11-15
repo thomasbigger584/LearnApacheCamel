@@ -30,5 +30,6 @@ public class ApacheCamelApplication implements CommandLineRunner {
         producerTemplate.sendBody("direct:resourceFile", "json/data.csv");
         producerTemplate.sendBody("direct:resourceFile", "json/data.json");
         producerTemplate.sendBody("direct:resourceFile", "json/data.xml");
+        producerTemplate.sendBody("direct:resourceFile", "json/data.yml");
     }
 }

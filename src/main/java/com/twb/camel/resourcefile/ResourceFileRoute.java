@@ -1,44 +1,42 @@
 package com.twb.camel.resourcefile;
 
-import org.apache.camel.Message;
 import org.apache.camel.spring.SpringRouteBuilder;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
+import static com.twb.camel.resourcefile.ResourceFileProcessor.FILE_EXTENSION_HEADER;
 
 @Component
 public class ResourceFileRoute extends SpringRouteBuilder {
     @Override
     public void configure() {
-        // @formatter:off
+        //@formatter:off
 
         from("direct:resourceFile").
 
                 process(new ResourceFileProcessor()).
 
                 process(exchange -> {
-                    Message message = exchange.getMessage();
-                    File file = message.getBody(File.class);
-                    String extension = FilenameUtils.getExtension(file.getName());
-                    message.setHeader("FileExtension", extension);
-                }).
-
-                process(exchange -> {
                     log.info(exchange.getMessage().getHeaders().toString());
                 }).
 
+                filter(exchange -> {
+                  FileType fileType = exchange.getIn().
+                          getHeader(FILE_EXTENSION_HEADER, FileType.class);
+                   return fileType != FileType.NOT_SUPPORTED;
+                }).
+
                 choice().
-                    when(header("FileExtension").isEqualTo("csv")).
+                    when(header(FILE_EXTENSION_HEADER).isEqualTo(FileType.CSV)).
                         to("jms:queue:csv.q").
-                    otherwise().when(header("FileExtension").isEqualTo("json")).
+                    otherwise().when(header(FILE_EXTENSION_HEADER).isEqualTo(FileType.JSON)).
                         to("jms:queue:json.q").
-                    otherwise().when(header("FileExtension").isEqualTo("xml")).
+                    otherwise().when(header(FILE_EXTENSION_HEADER).isEqualTo(FileType.XML)).
                         to("jms:queue:xml.q").
                 end().
 
                 to("jms:queue:file.q");
 
-        // @formatter:on
+        //@formatter:on
     }
+
 }

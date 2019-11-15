@@ -11,20 +11,18 @@ import java.io.File;
 
 @Slf4j
 public class ResourceFileProcessor implements Processor {
+    static final String FILE_EXTENSION_HEADER = "X-FileExtension";
+
     @Override
     public void process(Exchange exchange) throws Exception {
         Message message = exchange.getMessage();
         final String filePath = message.getBody(String.class);
         Resource resource = new ClassPathResource(filePath);
         File file = resource.getFile();
+        FileType fileType = FileType.getFileType(file);
 
-        if (exchange.getPattern().isOutCapable()) {
-            Message out = exchange.getOut();
-            out.copyFrom(exchange.getIn());
-            out.setBody(file, File.class);
-        } else {
-            Message in = exchange.getIn();
-            in.setBody(file, File.class);
-        }
+        Message in = exchange.getIn();
+        in.setHeader(FILE_EXTENSION_HEADER, fileType);
+        in.setBody(file, File.class);
     }
 }
