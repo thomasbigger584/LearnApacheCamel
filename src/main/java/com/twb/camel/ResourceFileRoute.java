@@ -11,6 +11,8 @@ public class ResourceFileRoute extends SpringRouteBuilder {
     public void configure() {
         //@formatter:off
 
+        errorHandler(deadLetterChannel("jms:queue:deadletter.q").useOriginalMessage());
+
         from("direct:resourceFile").
 
                 process(new ResourceFileProcessor()).
@@ -43,7 +45,10 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                         to("jms:queue:multicast1.q", "jms:queue:multicast2.q").
 
                 // call bean with parameters as annotations in service
-                bean(JavaBeanService.class, "call");
+                bean(JavaBeanService.class, "call").
+
+                // mean that calls exception should go to deadletter queue
+                bean(JavaBeanService.class, "throwException");
 
         //@formatter:on
     }

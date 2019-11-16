@@ -46,4 +46,9 @@ public class Receiver {
     public void receiveMulticast2(Message message) {
         log.info("Multicast2 received: '{}'", message);
     }
+
+    @JmsListener(destination = "deadletter.q")
+    public void receiveDeadLetter(Message message) {
+        log.info("DeadLetter received: '{}'", message);
+    }
 }

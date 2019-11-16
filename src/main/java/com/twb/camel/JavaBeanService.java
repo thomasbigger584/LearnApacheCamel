@@ -17,6 +17,9 @@ public class JavaBeanService {
         log.info(fileType.toString());
         log.info(file.toString());
         log.info("----->>>");
+    }
 
+    public void throwException() throws Exception {
+        throw new Exception();
     }
 }
