@@ -24,6 +24,8 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                    return fileType != FileType.NOT_SUPPORTED;
                 }).
 
+                to("jms:queue:file.q").
+
                 choice().
                     when(header(FILE_EXTENSION_HEADER).isEqualTo(FileType.CSV)).
                         to("jms:queue:csv.q").
@@ -31,9 +33,9 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                         to("jms:queue:json.q").
                     otherwise().when(header(FILE_EXTENSION_HEADER).isEqualTo(FileType.XML)).
                         to("jms:queue:xml.q").
+                    otherwise().
+                        to("jms:queue:unsupported.q").
                 end().
-
-                to("jms:queue:file.q").
 
                 multicast().
                     parallelProcessing().

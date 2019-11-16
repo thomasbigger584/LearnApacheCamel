@@ -19,8 +19,11 @@ public class ResourceFileProcessor implements Processor {
         final String filePath = message.getBody(String.class);
         Resource resource = new ClassPathResource(filePath);
         File file = resource.getFile();
+
         FileType fileType = FileType.getFileType(file);
 
+        // if we use getOut it overwrites headers and attachments
+        // best to update the getIn
         Message in = exchange.getIn();
         in.setHeader(FILE_EXTENSION_HEADER, fileType);
         in.setBody(file, File.class);
