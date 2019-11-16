@@ -1,4 +1,4 @@
-package com.twb.camel.resourcefile;
+package com.twb.camel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +14,13 @@ public enum FileType {
     NOT_SUPPORTED(""), CSV("csv"), JSON("json"), XML("xml");
 
     private final String fileType;
+
+    @Override
+    public String toString() {
+        return "FileType{" +
+                "fileType='" + fileType + '\'' +
+                '}';
+    }
 
     public static FileType getFileType(File file) {
         if (file == null) {

@@ -1,4 +1,4 @@
-package com.twb.camel.resourcefile;
+package com.twb.camel;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;

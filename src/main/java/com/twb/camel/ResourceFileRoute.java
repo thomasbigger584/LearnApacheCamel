@@ -1,9 +1,9 @@
-package com.twb.camel.resourcefile;
+package com.twb.camel;
 
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.springframework.stereotype.Component;
 
-import static com.twb.camel.resourcefile.ResourceFileProcessor.FILE_EXTENSION_HEADER;
+import static com.twb.camel.ResourceFileProcessor.FILE_EXTENSION_HEADER;
 
 @Component
 public class ResourceFileRoute extends SpringRouteBuilder {
@@ -40,7 +40,9 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                 multicast().
                     parallelProcessing().
                     stopOnException().
-                        to("jms:queue:multicast1.q", "jms:queue:multicast2.q");
+                        to("jms:queue:multicast1.q", "jms:queue:multicast2.q").
+
+                bean(JavaBeanService.class, "call");
 
         //@formatter:on
     }
