@@ -42,6 +42,7 @@ public class ResourceFileRoute extends SpringRouteBuilder {
                     stopOnException().
                         to("jms:queue:multicast1.q", "jms:queue:multicast2.q").
 
+                // call bean with parameters as annotations in service
                 bean(JavaBeanService.class, "call");
 
         //@formatter:on
